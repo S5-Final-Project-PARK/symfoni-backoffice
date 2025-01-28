@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class IngredientsCategoryController extends AbstractController
 {
-    #[Route('/ingredients-category/create', name: 'create_ingredients_category', methods: ['POST'])]
+    #[Route('/ingredients-category/create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Get the data from the request body (JSON payload)
@@ -43,8 +43,8 @@ final class IngredientsCategoryController extends AbstractController
         ], 201);
     }
 
-    #[Route('/ingredients-category/list', name: 'get_ingredients_category', methods: ['GET'])]
-    public function list(EntityManagerInterface $em, IngredientsCategoryRepository $repository): JsonResponse
+    #[Route('/ingredients-category/list', methods: ['GET'])]
+    public function list(IngredientsCategoryRepository $repository): JsonResponse
     {
         $categories = $repository->findAll();
 
