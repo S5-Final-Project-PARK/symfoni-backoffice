@@ -21,7 +21,7 @@ COPY . .
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Symfony dependencies (including Nelmio CORS)
-# RUN composer install --no-interaction --optimize-autoloader
+RUN composer install --no-interaction --optimize-autoloader
 
 # Expose the port that the Apache server will listen on
 EXPOSE 80
