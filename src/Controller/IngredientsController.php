@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class IngredientsController extends AbstractController
 {
-    #[Route('/ingredients/create', name: 'create_ingredients', methods: ['POST', 'GET'])]
+    #[Route('/ingredients/create', name: 'create_ingredients', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Get data from the request body (JSON payload)

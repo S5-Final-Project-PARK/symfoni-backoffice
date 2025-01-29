@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class IngredientCategoryController extends AbstractController
 {
-    #[Route('/ingredients-category/create', name: 'create_ingredients_category', methods: ['POST', 'GET'])]
+    #[Route('/ingredients-category/create', name: 'create_ingredients_category', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Get the data from the request body (JSON payload)
