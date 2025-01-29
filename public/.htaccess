@@ -2,5 +2,9 @@
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ /index.php [QSA,L]
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+    # Ensure POST requests are not converted to GET
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s+(/[^\s?]*) [NC]
+    RewriteRule ^ - [L]
 </IfModule>
