@@ -5,6 +5,6 @@
     RewriteRule ^(.*)$ index.php [QSA,L]
 
     # Ensure POST requests are not converted to GET
-    RewriteCond %{THE_REQUEST} ^[A-Z]+\s+(/[^\s?]*) [NC]
+    RewriteCond %{REQUEST_METHOD} POST
     RewriteRule ^ - [L]
 </IfModule>
