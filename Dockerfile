@@ -32,4 +32,5 @@ RUN chown -R www-data:www-data /var/www/html \
 EXPOSE 8080
 
 # Start Apache
-CMD ["apache2-foreground"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
+
