@@ -32,6 +32,8 @@ RUN composer require api
 
 RUN php bin/console cache:clear
 
+RUN php bin/console cache:clear --env=prod
+
 # Set the port Symfony will use
 ENV PORT=8000
 
