@@ -1,16 +1,18 @@
-# Use the official PHP image with Apache
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Install system dependencies and PHP extensions
+# Install required system dependencies
 RUN apt-get update && apt-get install -y \
     unzip \
-    libpq-dev \
-    libonig-dev \
+    git \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    libpq-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-install zip pdo pdo_mysql
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set working directory
 WORKDIR /app
@@ -18,24 +20,22 @@ WORKDIR /app
 # Copy application files
 COPY . /app/.
 
-# Set working directory
-WORKDIR /var/www/html
+# Ensure necessary directories exist
+RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
 
-# Copy project files
-COPY . .
+# Install dependencies
+#RUN composer install --ignore-platform-reqs
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer require symfony/serializer
 
-# Install Symfony dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer require api
 
-# Set file permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/var
 
-# Expose port 80
-EXPOSE 80
+# Set the port Symfony will use
+ENV PORT=8000
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Expose the application's port
+EXPOSE 8000
+
+# Start the Symfony server
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
