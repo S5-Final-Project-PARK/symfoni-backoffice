@@ -34,4 +34,5 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Start services
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+CMD ["symfony", "server:start", "--no-tls", "--port=8000"]
+
