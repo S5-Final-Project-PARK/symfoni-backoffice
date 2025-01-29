@@ -1,4 +1,4 @@
-# .htaccess file in the /public folder
+# .htaccess file in /public folder
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
