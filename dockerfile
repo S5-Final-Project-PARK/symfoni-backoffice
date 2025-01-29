@@ -34,4 +34,4 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Start services
-CMD service nginx start && php-fpm
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
