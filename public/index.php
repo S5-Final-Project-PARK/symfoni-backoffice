@@ -16,7 +16,8 @@ Request::setTrustedProxies(
 
 Request::setTrustedHosts([getenv('APP_URL')]); // Replace with your actual app URL or domain
 
-error_log(print_r(getallheaders(), true));
+error_log("SERVER DATA: " . print_r($_SERVER, true));
+error_log("REQUEST HEADERS: " . print_r(getallheaders(), true));
 
 return function (array $context) {
     return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
