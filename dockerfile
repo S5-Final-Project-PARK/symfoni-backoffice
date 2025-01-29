@@ -1,30 +1,41 @@
-# Use the official PHP image with Apache
-FROM php:8.1-apache
+FROM php:8.2-cli
 
-# Install system dependencies and PHP extensions required for Symfony
+# Install required system dependencies
 RUN apt-get update && apt-get install -y \
-    libicu-dev \
-    git \
     unzip \
-    && docker-php-ext-install intl pdo pdo_mysql opcache
+    git \
+    libzip-dev \
+    libpq-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-install zip pdo pdo_mysql
 
-# Enable mod_rewrite for Apache
-RUN a2enmod rewrite
-
-# Set the working directory in the container
-WORKDIR /var/www/html
-
-# Copy the local Symfony project into the container
-COPY . .
-
-# Install Composer (Symfony's package manager)
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install Symfony dependencies (including Nelmio CORS)
-RUN composer install --no-interaction --optimize-autoloader
+# Set working directory
+WORKDIR /app
 
-# Expose the port that the Apache server will listen on
-EXPOSE 80
+# Copy application files
+COPY . /app/.
 
-# Start the Apache server
-CMD ["apache2-foreground"]
+# Ensure necessary directories exist
+RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
+
+# Install dependencies
+#RUN composer install --ignore-platform-reqs
+
+RUN composer require symfony/serializer
+
+RUN composer require api
+
+
+# Set the port Symfony will use
+ENV PORT=8000
+
+# Expose the application's port
+EXPOSE 8000
+
+# Start the Symfony server
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
