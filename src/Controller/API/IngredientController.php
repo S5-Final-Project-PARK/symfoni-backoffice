@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\API;
 
 use App\Entity\Ingredients;
 use Doctrine\ORM\EntityManagerInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\API;
 
 use App\Entity\IngredientsCategory;
 use App\Repository\IngredientsCategoryRepository;
@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/api/ingredients-category', name: 'api_ingredients-category_')]
-final class IngredientsCategoryController extends AbstractController
+class IngredientsCategoryController extends AbstractController
 {
     #[Route('/create', name:'create' ,methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
@@ -54,3 +54,5 @@ final class IngredientsCategoryController extends AbstractController
         ]);
     }
 }
+
+?>
