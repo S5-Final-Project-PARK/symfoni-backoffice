@@ -6,7 +6,6 @@ use App\Repository\IngredientsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: IngredientsRepository::class)]
 class Ingredients
@@ -14,23 +13,19 @@ class Ingredients
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ingredients.list', 'ingredients.show', 'recipe.list', 'recipe.create', 'recipe.update', 'recipe.show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ingredients.list', 'ingredients.show', 'recipe.list', 'recipe.create', 'recipe.update', 'recipe.show'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'ingredients')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['ingredients.list', 'ingredients.show', 'ingredients.create'])]
-    private ?IngredientsCategory $idCategory = null;
+    private ?IngredientsCategory $Category = null;
 
     /**
      * @var Collection<int, Recipes>
      */
-    #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'idIngredients')]
-    #[Groups(['ingredients.list', 'ingredients.show'])]
+    #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'ingredients')]
     private Collection $recipes;
 
     public function __construct()
@@ -55,14 +50,14 @@ class Ingredients
         return $this;
     }
 
-    public function getIdCategory(): ?IngredientsCategory
+    public function getCategory(): ?IngredientsCategory
     {
-        return $this->idCategory;
+        return $this->Category;
     }
 
-    public function setIdCategory(?IngredientsCategory $idCategory): static
+    public function setCategory(?IngredientsCategory $Category): static
     {
-        $this->idCategory = $idCategory;
+        $this->Category = $Category;
 
         return $this;
     }
@@ -79,7 +74,7 @@ class Ingredients
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes->add($recipe);
-            $recipe->addIdIngredient($this);
+            $recipe->setIngredients($this);
         }
 
         return $this;
@@ -88,7 +83,10 @@ class Ingredients
     public function removeRecipe(Recipes $recipe): static
     {
         if ($this->recipes->removeElement($recipe)) {
-            $recipe->removeIdIngredient($this);
+            // set the owning side to null (unless already changed)
+            if ($recipe->getIngredients() === $this) {
+                $recipe->setIngredients(null);
+            }
         }
 
         return $this;

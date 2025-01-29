@@ -21,7 +21,7 @@ class Dishes
     /**
      * @var Collection<int, Recipes>
      */
-    #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'Dish')]
+    #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'dish')]
     private Collection $recipes;
 
     public function __construct()

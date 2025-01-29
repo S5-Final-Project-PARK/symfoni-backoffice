@@ -6,7 +6,6 @@ use App\Repository\IngredientsCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: IngredientsCategoryRepository::class)]
 class IngredientsCategory
@@ -14,18 +13,15 @@ class IngredientsCategory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category.list', 'category.show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category.list', 'category.show'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Ingredients>
      */
-    #[ORM\OneToMany(targetEntity: Ingredients::class, mappedBy: 'idCategory')]
-    #[Groups(['category.list'])]
+    #[ORM\OneToMany(targetEntity: Ingredients::class, mappedBy: 'Category')]
     private Collection $ingredients;
 
     public function __construct()
@@ -62,7 +58,7 @@ class IngredientsCategory
     {
         if (!$this->ingredients->contains($ingredient)) {
             $this->ingredients->add($ingredient);
-            $ingredient->setIdCategory($this);
+            $ingredient->setCategory($this);
         }
 
         return $this;
@@ -72,8 +68,8 @@ class IngredientsCategory
     {
         if ($this->ingredients->removeElement($ingredient)) {
             // set the owning side to null (unless already changed)
-            if ($ingredient->getIdCategory() === $this) {
-                $ingredient->setIdCategory(null);
+            if ($ingredient->getCategory() === $this) {
+                $ingredient->setCategory(null);
             }
         }
 

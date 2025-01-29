@@ -1,14 +1,9 @@
 nelmio_cors:
     defaults:
         allow_credentials: false
-        allow_origin: ['*']   # Allow any origin (IP address or domain)
-        allow_headers: ['*']  # Allow any headers
-        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'] # Allow any HTTP method
-        expose_headers: []
+        allow_origin: ['*']  # Or specify allowed origins, e.g., ['http://localhost:8080']
+        allow_headers: ['Content-Type', 'Authorization', 'X-BinaryBox-Api-Key']
+        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
         max_age: 3600
     paths:
-        '^/': # Apply CORS to all paths
-            allow_origin: ['*']  # Allow access from any origin
-            allow_methods: ['*']  # Allow any HTTP method
-            allow_headers: ['*']  # Allow any headers
-            allow_credentials: true  # If you want to allow credentials, set this to true
+        '^/api/': ~
