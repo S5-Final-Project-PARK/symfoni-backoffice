@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+    
+    ingredients_category_create:
+        path: /ingredients-category/create
+        methods: [POST]
+        controller: App\Controller\IngredientsCategoryController::create
