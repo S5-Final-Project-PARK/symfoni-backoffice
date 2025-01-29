@@ -1,10 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [QSA,L]
-
-    # Ensure POST requests are not converted to GET
     RewriteCond %{REQUEST_METHOD} POST
-    RewriteRule ^ - [L]
+    RewriteRule .* - [L]
 </IfModule>

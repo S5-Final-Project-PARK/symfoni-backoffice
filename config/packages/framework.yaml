@@ -9,6 +9,8 @@ framework:
     #fragments: true
     trusted_proxies: 'REMOTE_ADDR'
     trusted_headers: ['x-forwarded-for', 'x-forwarded-proto']
+    router:
+        strict_requirements: null
 
 when@test:
     framework:
