@@ -21,7 +21,7 @@ class IngredientsCategory
     /**
      * @var Collection<int, Ingredients>
      */
-    #[ORM\OneToMany(targetEntity: Ingredients::class, mappedBy: 'Category')]
+    #[ORM\OneToMany(targetEntity: Ingredients::class, mappedBy: 'idCategory')]
     private Collection $ingredients;
 
     public function __construct()
@@ -58,7 +58,7 @@ class IngredientsCategory
     {
         if (!$this->ingredients->contains($ingredient)) {
             $this->ingredients->add($ingredient);
-            $ingredient->setCategory($this);
+            $ingredient->setIdCategory($this);
         }
 
         return $this;
@@ -68,8 +68,8 @@ class IngredientsCategory
     {
         if ($this->ingredients->removeElement($ingredient)) {
             // set the owning side to null (unless already changed)
-            if ($ingredient->getCategory() === $this) {
-                $ingredient->setCategory(null);
+            if ($ingredient->getIdCategory() === $this) {
+                $ingredient->setIdCategory(null);
             }
         }
 

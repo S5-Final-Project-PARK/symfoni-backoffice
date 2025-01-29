@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RecipesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RecipesRepository::class)]
@@ -13,39 +15,58 @@ class Recipes
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'recipes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Dishes $dish = null;
+    /**
+     * @var Collection<int, Ingredients>
+     */
+    #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'recipes')]
+    private Collection $idIngredients;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Ingredients $ingredients = null;
+    private ?Dishes $Dish = null;
+
+    public function __construct()
+    {
+        $this->idIngredients = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDish(): ?Dishes
+    /**
+     * @return Collection<int, Ingredients>
+     */
+    public function getIdIngredients(): Collection
     {
-        return $this->dish;
+        return $this->idIngredients;
     }
 
-    public function setDish(?Dishes $dish): static
+    public function addIdIngredient(Ingredients $idIngredient): static
     {
-        $this->dish = $dish;
+        if (!$this->idIngredients->contains($idIngredient)) {
+            $this->idIngredients->add($idIngredient);
+        }
 
         return $this;
     }
 
-    public function getIngredients(): ?Ingredients
+    public function removeIdIngredient(Ingredients $idIngredient): static
     {
-        return $this->ingredients;
+        $this->idIngredients->removeElement($idIngredient);
+
+        return $this;
     }
 
-    public function setIngredients(?Ingredients $ingredients): static
+    public function getDish(): ?Dishes
     {
-        $this->ingredients = $ingredients;
+        return $this->Dish;
+    }
+
+    public function setDish(?Dishes $Dish): static
+    {
+        $this->Dish = $Dish;
 
         return $this;
     }
