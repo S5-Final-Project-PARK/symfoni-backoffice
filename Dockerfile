@@ -29,7 +29,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/var
 
 # Expose port 80
-EXPOSE 8080
+EXPOSE 80
 
 # Start Apache
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
