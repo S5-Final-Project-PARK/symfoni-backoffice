@@ -7,9 +7,11 @@ framework:
 
     #esi: true
     #fragments: true
-    trusted_proxies: 'REMOTE_ADDR'
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'  # Use this to configure proxies
+    trusted_hosts: '^symfoni-backoffice-production\.up\.railway\.app$'  # Restrict to your domain
     trusted_headers: ['x-forwarded-for', 'x-forwarded-proto']
     router:
+        host: '%env(SYMFONY_SERVER_NAME)%'
         strict_requirements: null
 
 when@test:
