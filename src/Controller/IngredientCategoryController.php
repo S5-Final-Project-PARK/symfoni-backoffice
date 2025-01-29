@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class IngredientsCategoryController extends AbstractController
+final class IngredientCategoryController extends AbstractController
 {
     #[Route('/ingredients-category/create', name: 'create_ingredients_category', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
