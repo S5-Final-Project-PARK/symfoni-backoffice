@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2-fpm
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    && docker-php-ext-install zip pdo pdo_mysql
+    nginx \
+    && docker-php-ext-install zip pdo pdo_pgsql
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -18,24 +19,19 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /app
 
 # Copy application files
-COPY . /app/.
+COPY . /app
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
 # Ensure necessary directories exist
-RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
+RUN mkdir -p /var/log/nginx /var/cache/nginx /run/php
 
-# Install dependencies
-#RUN composer install --ignore-platform-reqs
-
-RUN composer require symfony/serializer
-
-RUN composer require api
-
-
-# Set the port Symfony will use
-ENV PORT=8000
+# Copy Nginx configuration
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 # Expose the application's port
-EXPOSE 8000
+EXPOSE 80
 
-# Start the Symfony server
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Start services
+CMD service nginx start && php-fpm

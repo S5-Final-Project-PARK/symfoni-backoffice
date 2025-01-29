@@ -10,9 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
+#[Route('/api/ingredients-category', name: 'api_ingredients-category_')]
 final class IngredientsCategoryController extends AbstractController
 {
-    #[Route('/ingredients-category/create', methods: ['POST'])]
+    #[Route('/create', name:'create' ,methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Get the data from the request body (JSON payload)
@@ -43,7 +44,7 @@ final class IngredientsCategoryController extends AbstractController
         ], 201);
     }
 
-    #[Route('/ingredients-category/list', methods: ['GET'])]
+    #[Route('/list', name:'list', methods: ['GET'])]
     public function list(IngredientsCategoryRepository $repository): JsonResponse
     {
         $categories = $repository->findAll();

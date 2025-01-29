@@ -1,0 +1,14 @@
+_security_logout:
+    resource: security.route_loader.logout
+    type: service
+    
+security:
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        api:
+            pattern: ^/api/
+            stateless: true
+            anonymous: true
