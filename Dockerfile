@@ -30,6 +30,7 @@ RUN composer require symfony/serializer
 
 RUN composer require api
 
+RUN php bin/console cache:clear
 
 # Set the port Symfony will use
 ENV PORT=8000
