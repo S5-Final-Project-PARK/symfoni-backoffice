@@ -1,4 +1,4 @@
-# Use official PHP image with Apache
+# Use the official PHP image with Apache
 FROM php:8.2-apache
 
 # Install system dependencies and PHP extensions
@@ -32,5 +32,4 @@ RUN chown -R www-data:www-data /var/www/html \
 EXPOSE 80
 
 # Start Apache
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
-
+CMD ["apache2-foreground"]
