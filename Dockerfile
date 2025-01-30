@@ -32,6 +32,8 @@ RUN composer require symfony/serializer
 
 RUN composer require api
 
+RUN docker-php-ext-install pdo_pgsql
+
 RUN php bin/console cache:clear
 
 RUN php bin/console cache:clear --env=prod
