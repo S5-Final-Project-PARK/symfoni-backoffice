@@ -30,6 +30,8 @@ RUN composer require symfony/serializer
 
 RUN composer require api
 
+RUN php -m | grep pgsql
+
 RUN php bin/console cache:clear
 
 RUN php bin/console cache:clear --env=prod
