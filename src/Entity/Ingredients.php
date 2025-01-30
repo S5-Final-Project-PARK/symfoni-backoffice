@@ -14,23 +14,23 @@ class Ingredients
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['ingredients.list', 'ingredients.show', 'recipe.list', 'recipe.create', 'recipe.update', 'recipe.show'])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.list", "recipe.create", "recipe.update", "recipe.show"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['ingredients.list', 'ingredients.show', 'recipe.list', 'recipe.create', 'recipe.update', 'recipe.show'])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.list", "recipe.create", "recipe.update", "recipe.show"])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'ingredients')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['ingredients.list', 'ingredients.show', 'ingredients.create'])]
+    #[Groups(["ingredients.list", "ingredients.show", "ingredients.create", "category.show"])]
     private ?IngredientsCategory $idCategory = null;
 
     /**
      * @var Collection<int, Recipes>
      */
     #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'idIngredients')]
-    #[Groups(['ingredients.list', 'ingredients.show'])]
+    #[Groups(["ingredients.list", "ingredients.show"])]
     private Collection $recipes;
 
     public function __construct()

@@ -6,6 +6,7 @@ use App\Repository\DishesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DishesRepository::class)]
 class Dishes
@@ -13,15 +14,18 @@ class Dishes
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["dish.list", "dish.show", "recipe.list"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["dish.list", "dish.show", "recipe.list"])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Recipes>
      */
     #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'Dish')]
+    #[Groups(["dish.show", "recipe.list", "recipe.show"])]
     private Collection $recipes;
 
     public function __construct()

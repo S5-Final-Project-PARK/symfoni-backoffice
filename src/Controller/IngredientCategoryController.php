@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\IngredientsCategory;
+use App\Repository\IngredientsCategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,5 +41,15 @@ final class IngredientCategoryController extends AbstractController
                 'name' => $category->getName(),
             ]
         ], 201);
+    }
+
+    #[Route('/ingredients-category/list', name: 'kist_ingredients_category', methods: ['GET'])]
+    public function list(IngredientsCategoryRepository $repository): JsonResponse
+    {
+        $category = $repository->findAll();
+
+        return $this->json($category, 200, [], [
+            "groups" => ["category.list"]
+        ]);
     }
 }

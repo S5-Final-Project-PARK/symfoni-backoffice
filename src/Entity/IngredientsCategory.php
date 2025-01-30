@@ -6,6 +6,7 @@ use App\Repository\IngredientsCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: IngredientsCategoryRepository::class)]
 class IngredientsCategory
@@ -13,15 +14,18 @@ class IngredientsCategory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["category.list"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["category.list"])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Ingredients>
      */
     #[ORM\OneToMany(targetEntity: Ingredients::class, mappedBy: 'idCategory')]
+    #[Groups(["category.show"])]
     private Collection $ingredients;
 
     public function __construct()
