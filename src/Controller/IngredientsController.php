@@ -73,7 +73,7 @@ final class IngredientsController extends AbstractController
         }
 
         return $this->json($ingredient, 200, [], [
-            "groups" => ["ingredients.list"]
+            "groups" => ["ingredients.show"]
         ]);
     }
 
