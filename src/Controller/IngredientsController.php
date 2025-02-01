@@ -62,4 +62,21 @@ final class IngredientsController extends AbstractController
             "groups" => ["ingredients.list"]
         ]);
     }
+
+    #[Route('/ingredients/detail/{name}-{id}', name: 'show_ingredients', methods: ['GET'])]
+    public function show(string $name, int $id, IngredientsRepository $repository): JsonResponse
+    {
+        $ingredient = $repository->find($id);
+
+        if (!$ingredient) {
+            return $this->json(['error' => 'Ingredient not found'], 404);
+        }
+
+        return $this->json($ingredient, 200, [], [
+            "groups" => ["ingredients.list"]
+        ]);
+    }
+
+
+
 }
