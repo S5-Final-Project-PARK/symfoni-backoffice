@@ -59,7 +59,7 @@ final class IngredientsController extends AbstractController
         $category = $repository->findAll();
 
         return $this->json($category, 200, [], [
-            "groups" => ["ingredients.list"]
+            "groups" => ["ingredients.show"]
         ]);
     }
 
