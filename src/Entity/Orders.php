@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OrdersRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrdersRepository::class)]
 class Orders
@@ -12,16 +13,20 @@ class Orders
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["order.show"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::BIGINT)]
+    #[Groups(["order.show"])]
     private ?string $idClient = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["order.show"])]
     private ?Dishes $Dish = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["order.show"])]
     private ?\DateTimeInterface $Date = null;
 
     public function getId(): ?int

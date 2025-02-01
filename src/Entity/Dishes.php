@@ -14,18 +14,18 @@ class Dishes
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["dish.list", "dish.show", "recipe.list"])]
+    #[Groups(["dish.list", "dish.show", "recipe.list", "recipe.show", "order.show"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["dish.list", "dish.show", "recipe.list"])]
+    #[Groups(["dish.list", "dish.show", "recipe.list", "recipe.show", "order.show"])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Recipes>
      */
     #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'Dish')]
-    #[Groups(["dish.show", "recipe.list", "recipe.show"])]
+    #[Groups(["dish.show"])]
     private Collection $recipes;
 
     public function __construct()

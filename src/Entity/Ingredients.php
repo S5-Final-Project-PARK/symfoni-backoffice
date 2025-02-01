@@ -14,16 +14,16 @@ class Ingredients
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["ingredients.list", "ingredients.show", "recipe.list", "recipe.create", "recipe.update", "recipe.show"])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["ingredients.list", "ingredients.show", "recipe.list", "recipe.create", "recipe.update", "recipe.show"])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show"])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'ingredients')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["ingredients.show", "ingredients.create", "category.show"])]
+    #[Groups(["ingredients.show", "ingredients.create"])]
     private ?IngredientsCategory $idCategory = null;
 
     /**
