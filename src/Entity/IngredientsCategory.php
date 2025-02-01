@@ -14,11 +14,11 @@ class IngredientsCategory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["category.list"])]
+    #[Groups(["category.list", "ingredients.show"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["category.list"])]
+    #[Groups(["category.list", "ingredients.show"])]
     private ?string $name = null;
 
     /**
