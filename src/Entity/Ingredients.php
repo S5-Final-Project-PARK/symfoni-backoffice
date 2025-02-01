@@ -23,14 +23,14 @@ class Ingredients
 
     #[ORM\ManyToOne(inversedBy: 'ingredients')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["ingredients.list", "ingredients.show", "ingredients.create", "category.show"])]
+    #[Groups(["ingredients.show", "ingredients.create", "category.show"])]
     private ?IngredientsCategory $idCategory = null;
 
     /**
      * @var Collection<int, Recipes>
      */
     #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'idIngredients')]
-    #[Groups(["ingredients.list", "ingredients.show"])]
+    #[Groups(["ingredients.get"])]
     private Collection $recipes;
 
     public function __construct()

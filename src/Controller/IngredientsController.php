@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ingredients;
 use App\Entity\IngredientsCategory;
+use App\Repository\IngredientsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,5 +52,14 @@ final class IngredientsController extends AbstractController
                 'category' => $ingredient->getIdCategory()->getName(), // Assuming `getName()` exists in IngredientsCategory
             ]
         ], 201);
+    }
+
+    #[Route('/ingredients/list', name: 'list_ingredients', methods: ['GET'])]
+    public function list(IngredientsRepository $repository): JsonResponse{
+        $category = $repository->findAll();
+
+        return $this->json($category, 200, [], [
+            "groups" => ["ingredients.list"]
+        ]);
     }
 }
