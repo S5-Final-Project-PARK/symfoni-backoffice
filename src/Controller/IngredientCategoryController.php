@@ -52,4 +52,18 @@ final class IngredientCategoryController extends AbstractController
             "groups" => ["category.list"]
         ]);
     }
+
+    #[Route('/ingredients-category/get/{name}-{id}', name: 'get_ingredients_from_category', methods: ['GET'])]
+    public function getList(string $name, int $id, IngredientsCategoryRepository $repository): JsonResponse
+    {
+        $category = $repository->find($id);
+
+        if (!$category) {
+            return $this->json(['error' => 'Category not found'], 404);
+        }
+
+        return $this->json($category, 200, [], [
+            "groups" => ["category.show"]
+        ]);
+    }
 }
