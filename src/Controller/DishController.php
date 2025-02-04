@@ -4,13 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Dishes;
 use App\Repository\DishesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
 
-final class DishController extends AbstractController
+class DishController extends AbstractController
 {
     #[Route('/dishes/create', name: 'create_dish', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
@@ -60,5 +61,35 @@ final class DishController extends AbstractController
         return $this->json($dish, 200, [], [
             "groups" => ["dish.show"]
         ]);
+    }
+
+    #[Route('/dishes/cancel/{id}', methods: ['DELETE'])]
+    public function cancel(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $dish = $entityManager->getRepository(Dishes::class)->find($id);
+        
+        if (!$dish) {
+            return new JsonResponse(['error' => 'Dish not found'], Response::HTTP_NOT_FOUND);
+        }
+        
+        $entityManager->remove($dish);
+        $entityManager->flush();
+        
+        return new JsonResponse(['message' => 'Dish deleted successfully']);
+    }
+
+    #[Route('/dishes/delete/{id}', methods: ['DELETE'])]
+    public function delete(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $dish = $entityManager->getRepository(Dishes::class)->find($id);
+        
+        if (!$dish) {
+            return new JsonResponse(['error' => 'Dish not found'], Response::HTTP_NOT_FOUND);
+        }
+        
+        $entityManager->remove($dish);
+        $entityManager->flush();
+        
+        return new JsonResponse(['message' => 'Dish deleted successfully']);
     }
 }

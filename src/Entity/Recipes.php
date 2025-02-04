@@ -29,9 +29,16 @@ class Recipes
     #[Groups(["recipe.list", "recipe.create", "recipe.update", "order.show" ,"recipe.show"])]
     private ?Dishes $Dish = null;
 
+    /**
+     * @var Collection<int, RecipeIngredient>
+     */
+    #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'recipe')]
+    private Collection $recipeIngredients;
+
     public function __construct()
     {
         $this->idIngredients = new ArrayCollection();
+        $this->recipeIngredients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,6 +78,36 @@ class Recipes
     public function setDish(?Dishes $Dish): static
     {
         $this->Dish = $Dish;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeIngredient>
+     */
+    public function getRecipeIngredients(): Collection
+    {
+        return $this->recipeIngredients;
+    }
+
+    public function addRecipeIngredient(RecipeIngredient $recipeIngredient): static
+    {
+        if (!$this->recipeIngredients->contains($recipeIngredient)) {
+            $this->recipeIngredients->add($recipeIngredient);
+            $recipeIngredient->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeIngredient(RecipeIngredient $recipeIngredient): static
+    {
+        if ($this->recipeIngredients->removeElement($recipeIngredient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeIngredient->getRecipe() === $this) {
+                $recipeIngredient->setRecipe(null);
+            }
+        }
 
         return $this;
     }
