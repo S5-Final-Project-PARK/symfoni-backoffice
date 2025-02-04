@@ -2,63 +2,68 @@
 
 namespace App\Controller;
 
-use App\Entity\Dishes;
-use App\Repository\DishesRepository;
+use App\Entity\IngredientsCategory;
+use App\Repository\IngredientsCategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class DishController extends AbstractController
+final class IngredientCategoryController extends AbstractController
 {
-    #[Route('/dishes/create', name: 'create_dish', methods: ['POST'])]
+    #[Route('/ingredients-category/create', name: 'create_ingredients_category', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
+        // Get the data from the request body (JSON payload)
         $data = json_decode($request->getContent(), true);
 
+        // Check if the 'name' field is provided
         if (!isset($data['name'])) {
             return $this->json([
                 'error' => 'Missing required field: name'
             ], 400);
         }
 
-        $dish = new Dishes();
-        $dish->setName($data['name']);
+        // Create a new IngredientsCategory object and set its name
+        $category = new IngredientsCategory();
+        $category->setName($data['name']);
 
-        $em->persist($dish);
+        // Persist the category to the database
+        $em->persist($category);
         $em->flush();
 
+        // Return a response with the created category data
         return $this->json([
-            'message' => 'Dish created successfully',
-            'dish' => [
-                'id' => $dish->getId(),
-                'name' => $dish->getName(),
+            'message' => 'IngredientsCategory created successfully',
+            'category' => [
+                'id' => $category->getId(),
+                'name' => $category->getName(),
             ]
         ], 201);
     }
 
-    #[Route('/dishes/list', name: 'list_dishes', methods: ['GET'])]
-    public function list(DishesRepository $repository): JsonResponse
+    #[Route('/ingredients-category/list', name: 'kist_ingredients_category', methods: ['GET'])]
+    public function list(IngredientsCategoryRepository $repository): JsonResponse
     {
-        $dishes = $repository->findAll();
+        $category = $repository->findAll();
 
-        return $this->json($dishes, 200, [], [
-            "groups" => ["dish.list"]
+        return $this->json($category, 200, [], [
+            "groups" => ["category.list"]
         ]);
     }
 
-    #[Route('/dishes/get/{name}-{id}', name: 'get_dish', methods: ['GET'])]
-    public function getList(string $name, int $id, DishesRepository $repository): JsonResponse
+    #[Route('/ingredients-category/get/{name}-{id}', name: 'get_ingredients_from_category', methods: ['GET'])]
+    public function getList(string $name, int $id, IngredientsCategoryRepository $repository): JsonResponse
     {
-        $dish = $repository->find($id);
+        $category = $repository->find($id);
 
-        if (!$dish) {
-            return $this->json(['error' => 'Dish not found'], 404);
+        if (!$category) {
+            return $this->json(['error' => 'Category not found'], 404);
         }
 
-        return $this->json($dish, 200, [], [
-            "groups" => ["dish.show"]
+        return $this->json($category, 200, [], [
+            "groups" => ["category.show"]
         ]);
     }
 }
