@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\IngredientsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -32,6 +33,10 @@ class Ingredients
     #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'idIngredients')]
     #[Groups(["ingredients.get"])]
     private Collection $recipes;
+
+    #[ORM\Column(type: Types::BIGINT, nullable: true)]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show"])]
+    private ?string $Quantity = null;
 
     public function __construct()
     {
@@ -90,6 +95,18 @@ class Ingredients
         if ($this->recipes->removeElement($recipe)) {
             $recipe->removeIdIngredient($this);
         }
+
+        return $this;
+    }
+
+    public function getQuantity(): ?string
+    {
+        return $this->Quantity;
+    }
+
+    public function setQuantity(?string $Quantity): static
+    {
+        $this->Quantity = $Quantity;
 
         return $this;
     }
