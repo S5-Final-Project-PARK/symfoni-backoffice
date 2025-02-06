@@ -15,11 +15,11 @@ class Ingredients
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show"])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show", "logs.show"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show"])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show", "logs.show"])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'ingredients')]
@@ -38,9 +38,16 @@ class Ingredients
     #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show"])]
     private ?string $Quantity = null;
 
+    /**
+     * @var Collection<int, IngredientsLogs>
+     */
+    #[ORM\OneToMany(targetEntity: IngredientsLogs::class, mappedBy: 'Ingredients')]
+    private Collection $ingredientsLogs;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+        $this->ingredientsLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,6 +114,36 @@ class Ingredients
     public function setQuantity(?string $Quantity): static
     {
         $this->Quantity = $Quantity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, IngredientsLogs>
+     */
+    public function getOldQuantity(): Collection
+    {
+        return $this->ingredientsLogs;
+    }
+
+    public function addOldQuantity(IngredientsLogs $oldQuantity): static
+    {
+        if (!$this->ingredientsLogs->contains($oldQuantity)) {
+            $this->ingredientsLogs->add($oldQuantity);
+            $oldQuantity->setIngredients($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOldQuantity(IngredientsLogs $oldQuantity): static
+    {
+        if ($this->ingredientsLogs->removeElement($oldQuantity)) {
+            // set the owning side to null (unless already changed)
+            if ($oldQuantity->getIngredients() === $this) {
+                $oldQuantity->setIngredients(null);
+            }
+        }
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ingredients;
 use App\Entity\IngredientsCategory;
+use App\Entity\IngredientsLogs;
 use App\Repository\IngredientsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,6 +55,54 @@ final class IngredientsController extends AbstractController
         ], 201);
     }
 
+    #[Route('/ingredients/update-quantity', name: 'update_ingredient_quantity', methods: ['POST'])]
+    public function updateQuantity(Request $request, EntityManagerInterface $em, IngredientsRepository $ingredientsRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['ingredient_id'], $data['new_quantity'])) {
+            return $this->json(['error' => 'Missing required fields: ingredient_id, new_quantity'], 400);
+        }
+
+        $ingredient = $ingredientsRepository->find($data['ingredient_id']);
+        if (!$ingredient) {
+            return $this->json(['error' => 'Ingredient not found'], 404);
+        }
+
+        // Log the old quantity before updating
+        $oldQuantity = $ingredient->getQuantity();
+        $newQuantity = $data['new_quantity'];
+
+        if ($newQuantity < 0) {
+            return $this->json(['error' => 'Quantity cannot be negative'], 400);
+        }
+
+        // Update ingredient quantity
+        $ingredient->setQuantity($newQuantity);
+
+        // Create an IngredientsLogs entry
+        $log = new IngredientsLogs();
+        $log->setIngredients($ingredient);
+        $log->setOldQuantity($oldQuantity);
+        $log->setNewQuantity($newQuantity);
+        $log->setUpdatedAt(new \DateTime());
+
+        $em->persist($ingredient);
+        $em->persist($log);
+        $em->flush();
+
+        return $this->json([
+            'message' => 'Ingredient quantity updated successfully',
+            'ingredient' => [
+                'id' => $ingredient->getId(),
+                'name' => $ingredient->getName(),
+                'old_quantity' => $oldQuantity,
+                'new_quantity' => $newQuantity,
+            ]
+        ], 200);
+    }
+
+
     #[Route('/ingredients/list', name: 'list_ingredients', methods: ['GET'])]
     public function list(IngredientsRepository $repository): JsonResponse{
         $category = $repository->findAll();
@@ -76,7 +125,4 @@ final class IngredientsController extends AbstractController
             "groups" => ["ingredients.show"]
         ]);
     }
-
-
-
 }

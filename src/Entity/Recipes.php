@@ -33,6 +33,7 @@ class Recipes
      * @var Collection<int, RecipeIngredient>
      */
     #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'recipe')]
+    #[Groups(["recipe.list", "recipe.create", "recipe.update", "order.show" ,"recipe.show"])]
     private Collection $recipeIngredients;
 
     public function __construct()

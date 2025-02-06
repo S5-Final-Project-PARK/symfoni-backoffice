@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DishesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -27,6 +28,9 @@ class Dishes
     #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'Dish')]
     #[Groups(["dish.show"])]
     private Collection $recipes;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 38, scale: 2)]
+    private ?string $price = null;
 
     public function __construct()
     {
@@ -76,6 +80,18 @@ class Dishes
                 $recipe->setDish(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(string $price): static
+    {
+        $this->price = $price;
 
         return $this;
     }
