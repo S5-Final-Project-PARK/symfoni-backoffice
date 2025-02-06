@@ -44,6 +44,12 @@ class DishController extends AbstractController
     {
         $dishes = $repository->findAll();
 
+        if(!$dishes){
+            return $this->json([
+                'error' => 'No Dishes found'
+            ], 400);
+        }
+
         return $this->json($dishes, 200, [], [
             "groups" => ["dish.list"]
         ]);
