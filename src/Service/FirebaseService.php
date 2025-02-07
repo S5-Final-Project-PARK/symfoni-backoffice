@@ -6,19 +6,29 @@ use Kreait\Firebase\Auth;
 use Kreait\Firebase\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 use Kreait\Firebase\Exception\DatabaseException;
+use Google\Auth\Credentials\ServiceAccountCredentials;
+use Google\Auth\HttpHandler\HttpHandlerFactory;
+use GuzzleHttp\Client;
 
 class FirebaseService
 {
     private $auth;
-    private Firestore $firestore;
+    private string $projectId;
+    private string $credentialsPath;
+    private Client $httpClient;
+    private string $accessToken;
 
-    public function __construct(string $firebaseCredentialsPath)
+    public function __construct($firebaseCredentialsPath)
     {
         $factory = (new Factory)->withServiceAccount($firebaseCredentialsPath);
         $this->auth = $factory->createAuth();
-        $this->firestore = new FirestoreClient([
-            'keyFilePath' => $firebaseCredentialsPath
-        ]);
+        
+        $this->credentialsPath = $firebaseCredentialsPath; // Update path
+        $this->httpClient = new Client();
+        $this->projectId = json_decode(file_get_contents($this->credentialsPath), true)['project_id'];
+
+        // Authenticate and get an OAuth token
+        $this->accessToken = $this->authenticate();
     }
 
     public function verifyToken(string $idToken): ?Auth\UserRecord
@@ -31,92 +41,70 @@ class FirebaseService
     }
 
     /**
-     * Add or Update a Document in Firestore
-     *
-     * @param string $collection Name of the Firestore collection
-     * @param string|null $documentId (Optional) If provided, updates the document; otherwise, creates a new one
-     * @param array $data Data to store in Firestore
-     * @return array The document ID and message
+     * Authenticate using the service account and get an OAuth2 access token
      */
-    public function saveDocument(string $collection, ?string $documentId, array $data): array
+    private function authenticate(): string
     {
-        try {
-            $firestore = $this->firestore->database();
-            $docRef = $documentId ? $firestore->collection($collection)->document($documentId) 
-                                  : $firestore->collection($collection)->add($data);
+        $scopes = ['https://www.googleapis.com/auth/datastore'];
 
-            if ($documentId) {
-                $docRef->set($data, ['merge' => true]); // Merging keeps existing fields
-                return ['documentId' => $documentId, 'message' => 'Document updated successfully'];
-            }
+        $auth = new ServiceAccountCredentials($scopes, $this->credentialsPath);
+        $auth->fetchAuthToken(HttpHandlerFactory::build());
 
-            return ['documentId' => $docRef->id(), 'message' => 'Document created successfully'];
-        } catch (DatabaseException $e) {
-            return ['error' => 'Failed to save document: ' . $e->getMessage()];
-        }
+        return $auth->getLastReceivedToken()['access_token'];
     }
 
     /**
-     * Fetch a Document from Firestore
-     *
-     * @param string $collection Name of the Firestore collection
-     * @param string $documentId ID of the document
-     * @return array Document data or error message
+     * Fetch a document from Firestore (REST API)
      */
     public function getDocument(string $collection, string $documentId): array
     {
+        $url = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}/{$documentId}";
+
         try {
-            $docRef = $this->firestore->collection($collection)->document($documentId);
-            $snapshot = $docRef->snapshot();
+            $response = $this->httpClient->get($url, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
 
-            if (!$snapshot->exists()) {
-                return ['error' => 'Document not found'];
-            }
-
-            return ['documentId' => $documentId, 'data' => $snapshot->data()];
-        } catch (DatabaseException $e) {
-            return ['error' => 'Failed to fetch document: ' . $e->getMessage()];
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+            return ['error' => 'Document not found'];
         }
     }
 
     /**
-     * Fetch All Documents from a Firestore Collection
-     *
-     * @param string $collection Name of the Firestore collection
-     * @return array List of documents
+     * Send or update data in Firestore
      */
-    public function getAllDocuments(string $collection): array
+    public function setDocument(string $collection, string $documentId, array $data): array
     {
+        $url = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}/{$documentId}";
+
         try {
-            $documents = $this->firestore->collection($collection)->documents();
-            $result = [];
+            $response = $this->httpClient->patch($url, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => ['fields' => $this->formatFirestoreData($data)],
+            ]);
 
-            foreach ($documents as $document) {
-                if ($document->exists()) {
-                    $result[] = ['documentId' => $document->id(), 'data' => $document->data()];
-                }
-            }
-
-            return $result;
-        } catch (DatabaseException $e) {
-            return ['error' => 'Failed to fetch documents: ' . $e->getMessage()];
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+            return ['error' => 'Failed to update document'];
         }
     }
 
     /**
-     * Delete a Document from Firestore
-     *
-     * @param string $collection Name of the Firestore collection
-     * @param string $documentId ID of the document to delete
-     * @return array Response message
+     * Format Firestore data correctly (Firestore requires { "field_name": { "stringValue": "value" } })
      */
-    public function deleteDocument(string $collection, string $documentId): array
+    private function formatFirestoreData(array $data): array
     {
-        try {
-            $this->firestore->collection($collection)->document($documentId)->delete();
-            return ['documentId' => $documentId, 'message' => 'Document deleted successfully'];
-        } catch (DatabaseException $e) {
-            return ['error' => 'Failed to delete document: ' . $e->getMessage()];
+        $formattedData = [];
+        foreach ($data as $key => $value) {
+            $formattedData[$key] = ['stringValue' => $value]; // Modify type if needed
         }
+        return $formattedData;
     }
 }

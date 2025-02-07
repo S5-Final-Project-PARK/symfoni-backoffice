@@ -85,21 +85,18 @@ class FireBaseController extends AbstractController
     }
 
     #[Route("/firebase/save", name:"firebase_save", methods:['POST'])]
-    public function saveToFirestore(Request $request): JsonResponse
+    public function setDocument(string $collection, string $documentId, Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        $response = $this->firebaseService->setDocument($collection, $documentId, $data);
+        return new JsonResponse($response, 200);
+    }
 
-        if (!isset($data['collection'], $data['data'])) {
-            return new JsonResponse(['error' => 'Missing collection or data field'], 400);
-        }
-
-        $collection = $data['collection'];
-        $documentId = $data['documentId'] ?? null; // Optional: If provided, it updates the document
-        $documentData = $data['data'];
-
-        $response = $this->firebaseService->saveDocument($collection, $documentId, $documentData);
-
-        return new JsonResponse($response);
+    #[Route("/firebase/get", name:"firebase_get", methods:['GET'])]
+    public function getDocument(string $collection, string $documentId): JsonResponse
+    {
+        $response = $this->firebaseService->getDocument($collection, $documentId);
+        return new JsonResponse($response, 200);
     }
 
 

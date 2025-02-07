@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     && docker-php-ext-install zip pdo pdo_mysql
 
-RUN pecl install grpc
+# RUN pecl install grpc
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -34,7 +34,7 @@ RUN composer require symfony/serializer
 
 RUN composer require api
 
-# RUN composer require google/cloud-firestore --ignore-platform-req=ext-grpc
+RUN composer require google/auth guzzlehttp/guzzle
 
 RUN docker-php-ext-install pdo_pgsql
 
