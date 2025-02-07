@@ -34,7 +34,7 @@ class FireBaseController extends AbstractController
     }
 
 
-    #[Route("/api/login", name:"firebase_login", methods:['POST'])]
+    #[Route("/firebase/login", name:"firebase_login", methods:['POST'])]
     public function login(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -60,7 +60,7 @@ class FireBaseController extends AbstractController
         return new JsonResponse(['message' => 'Email and password are required'], Response::HTTP_BAD_REQUEST);
     }
 
-    #[Route("/api/verify", name:"firebase_verify", methods:['POST'])]
+    #[Route("/firebase/verify", name:"firebase_verify", methods:['POST'])]
     public function verifyToken(Request $request): JsonResponse
     {
         $token = $request->headers->get('Authorization');
