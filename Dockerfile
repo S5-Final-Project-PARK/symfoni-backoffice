@@ -26,7 +26,7 @@ RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
 # Install dependencies
 #RUN composer install --ignore-platform-reqs
 
-RUN composer require doctrine/dbal
+# RUN composer require doctrine/dbal
 
 RUN composer require symfony/serializer
 
