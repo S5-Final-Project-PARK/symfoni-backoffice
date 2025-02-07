@@ -19,7 +19,7 @@ class FireBaseController extends AbstractController
     public function __construct(FirebaseService $firebaseService)
     {
         // Initialize Firebase Auth
-        $firebase = (new Factory)->withServiceAccount(__DIR__ . '/../firebase.json'); // Path to your Firebase credentials file
+        $firebase = (new Factory)->withServiceAccount(__DIR__ . '/../../config/firebase_credentials.json'); // Path to your Firebase credentials file
         $this->auth = $firebase->createAuth();
         $this->firebaseService = $firebaseService;
     }
