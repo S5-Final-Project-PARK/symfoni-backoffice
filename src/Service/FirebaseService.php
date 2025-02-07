@@ -15,6 +15,7 @@ class FirebaseService
     {
         $factory = (new Factory)->withServiceAccount($firebaseCredentialsPath);
         $this->auth = $factory->createAuth();
+        $this->firestore = $factory->createFirestore();
     }
 
     public function verifyToken(string $idToken): ?Auth\UserRecord
