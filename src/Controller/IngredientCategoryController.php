@@ -43,7 +43,7 @@ final class IngredientCategoryController extends AbstractController
         ], 201);
     }
 
-    #[Route('/ingredients-category/list', name: 'kist_ingredients_category', methods: ['GET'])]
+    #[Route('/ingredients-category/list', name: 'list_ingredients_category', methods: ['GET'])]
     public function list(IngredientsCategoryRepository $repository): JsonResponse
     {
         $category = $repository->findAll();

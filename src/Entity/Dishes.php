@@ -30,6 +30,7 @@ class Dishes
     private Collection $recipes;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 38, scale: 2)]
+    #[Groups(["dish.list", "dish.show", "recipe.list", "recipe.show", "order.show"])]
     private ?string $price = null;
 
     public function __construct()

@@ -20,6 +20,14 @@ class Orders
     #[Groups(["order.show"])]
     private ?string $idClient = null;
 
+    #[ORM\Column(type: Types::BIGINT)]
+    #[Groups(["order.show"])]
+    private ?string $unit = null;
+
+    #[ORM\Column(type: Types::BIGINT)]
+    #[Groups(["order.show"])]
+    private ?string $unit_price = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(["order.show"])]
@@ -28,6 +36,13 @@ class Orders
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(["order.show"])]
     private ?\DateTimeInterface $Date = null;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[Groups(["order.show"])]
+    private ?string $email = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $confirmation = false;
 
     public function getId(): ?int
     {
@@ -66,6 +81,54 @@ class Orders
     public function setDate(\DateTimeInterface $Date): static
     {
         $this->Date = $Date;
+
+        return $this;
+    }
+
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(string $unit): static
+    {
+        $this->unit = $unit;
+
+        return $this;
+    }
+
+    public function setUnitPrice(string $unit_price): static
+    {
+        $this->unit_price = $unit_price;
+
+        return $this;
+    }
+
+    public function getUnitPrice(): ?string
+    {
+        return $this->unit_price;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function isConfirmation(): bool
+    {
+        return $this->confirmation;
+    }
+
+    public function setConfirmation(bool $confirmation): static
+    {
+        $this->confirmation = $confirmation;
 
         return $this;
     }

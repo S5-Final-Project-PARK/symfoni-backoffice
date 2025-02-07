@@ -82,19 +82,19 @@ class FirebaseService
     public function setDocument(string $collection, string $documentId, array $data): array
     {
         $url = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}/{$documentId}";
-
+        
         try {
             $response = $this->httpClient->patch($url, [
                 'headers' => [
                     'Authorization' => "Bearer {$this->accessToken}",
                     'Content-Type' => 'application/json',
                 ],
-                'json' => ['fields' => $this->formatFirestoreData($data)],
+                'json' => $data,
             ]);
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
-            return ['error' => 'Failed to update document'];
+            return ['error' => 'Failed to update document in Firestore', 'message' => $e->getMessage()];
         }
     }
 
@@ -105,8 +105,14 @@ class FirebaseService
     {
         $formattedData = [];
         foreach ($data as $key => $value) {
-            $formattedData[$key] = ['stringValue' => $value]; // Modify type if needed
+            if (is_array($value)) {
+                // Recursively handle nested arrays (for dishes)
+                $formattedData[$key] = ['arrayValue' => ['values' => $this->formatFirestoreData($value)]];
+            } else {
+                $formattedData[$key] = ['stringValue' => (string) $value];
+            }
         }
+
         return $formattedData;
     }
 }
