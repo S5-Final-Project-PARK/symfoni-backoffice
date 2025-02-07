@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    php-dev php-pear\
     && docker-php-ext-install zip pdo pdo_mysql
 
 RUN pecl install grpc
