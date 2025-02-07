@@ -34,7 +34,7 @@ RUN composer require symfony/serializer
 
 RUN composer require api
 
-RUN composer require google/cloud-firestore --ignore-platform-req=ext-grpc
+# RUN composer require google/cloud-firestore --ignore-platform-req=ext-grpc
 
 RUN docker-php-ext-install pdo_pgsql
 
