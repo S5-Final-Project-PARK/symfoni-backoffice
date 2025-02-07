@@ -84,18 +84,31 @@ class FireBaseController extends AbstractController
         return new JsonResponse(['message' => 'Token is valid', 'user' => $user->uid]);
     }
 
-    #[Route("/firebase/save", name:"firebase_save", methods:['POST'])]
-    public function setDocument(string $collection, string $documentId, Request $request): JsonResponse
+    #[Route("/firebase/save", name: "firebase_save", methods: ['POST'])]
+    public function setDocument(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $response = $this->firebaseService->setDocument($collection, $documentId, $data);
+
+        // Ensure the required fields exist
+        if (!isset($data['collection'], $data['documentId'], $data['fields'])) {
+            return new JsonResponse(['error' => 'Missing collection, documentId, or fields'], 400);
+        }
+
+        $response = $this->firebaseService->setDocument($data['collection'], $data['documentId'], $data['fields']);
         return new JsonResponse($response, 200);
     }
 
-    #[Route("/firebase/get", name:"firebase_get", methods:['GET'])]
-    public function getDocument(string $collection, string $documentId): JsonResponse
+    #[Route("/firebase/get", name: "firebase_get", methods: ['POST'])]
+    public function getDocument(Request $request): JsonResponse
     {
-        $response = $this->firebaseService->getDocument($collection, $documentId);
+        $data = json_decode($request->getContent(), true);
+
+        // Ensure the required fields exist
+        if (!isset($data['collection'], $data['documentId'])) {
+            return new JsonResponse(['error' => 'Missing collection or documentId'], 400);
+        }
+
+        $response = $this->firebaseService->getDocument($data['collection'], $data['documentId']);
         return new JsonResponse($response, 200);
     }
 
