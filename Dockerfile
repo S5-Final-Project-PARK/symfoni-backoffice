@@ -28,6 +28,8 @@ RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
 
 # RUN composer require doctrine/dbal
 
+RUN gpg --batch --yes --passphrase "12345bdd" --decrypt /app/firebase_credentials.json.gpg > /app/config/firebase_credentials.json
+
 RUN composer require symfony/serializer
 
 RUN composer require api
