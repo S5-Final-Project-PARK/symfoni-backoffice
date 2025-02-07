@@ -1,5 +1,9 @@
 FROM php:8.2-cli
 
+RUN php bin/console cache:clear
+
+RUN php bin/console cache:clear --env=prod
+
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
     unzip \
@@ -33,10 +37,6 @@ RUN composer require symfony/serializer
 RUN composer require api
 
 RUN docker-php-ext-install pdo_pgsql
-
-RUN php bin/console cache:clear
-
-RUN php bin/console cache:clear --env=prod
 
 # Set the port Symfony will use
 ENV PORT=8000
