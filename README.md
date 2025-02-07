@@ -178,3 +178,30 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
           'name'
         }
       }
+
+  <h2>Orders</h2>
+
+    save_order                      POST     ANY      ANY    /orders/save
+      data{
+          'date'
+          'dishes': {"name", "unit"}
+          'email'
+      }
+    get_orders                      GET      ANY      ANY    /orders/get
+      return{[
+          'id'
+          'unit'
+          'unit_price'
+          'Dish':{
+              'id',
+              'name',
+              'recipe':{}
+          }
+          'email'
+          'date'
+      ]}
+    
+    update_order_confirmation       POST     ANY      ANY    /orders/update/{id}
+      data{
+        *on url change id by the corresponding order
+      }
