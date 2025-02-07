@@ -49,13 +49,13 @@ class FireBaseController extends AbstractController
                 return new JsonResponse([
                     'message' => 'Login successful',
                     'idToken' => $idToken,
-                ]);
+                ],200);
             } catch (\Kreait\Firebase\Exception\Auth\InvalidPassword $e) {
-                return new JsonResponse(['message' => 'Invalid password'], Response::HTTP_UNAUTHORIZED);
+                return new JsonResponse(['error' => 'Invalid password'], Response::HTTP_UNAUTHORIZED);
             } catch (\Kreait\Firebase\Exception\Auth\UserNotFound $e) {
-                return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+                return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
             } catch (\Kreait\Firebase\Exception\AuthException $e) {
-                return new JsonResponse(['message' => 'Authentification Error'], Response::HTTP_UNAUTHORIZED);
+                return new JsonResponse(['error' => 'Authentification Error'], Response::HTTP_UNAUTHORIZED);
             }
         }
 
