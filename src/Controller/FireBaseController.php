@@ -111,7 +111,7 @@ class FireBaseController extends AbstractController
         $collection = $data['collection'];
         $documentId = $data['documentId'] ?? null;
 
-        $response = $this->firebaseService->getDocument($data['collection'], $data['documentId']);
+        $response = $this->firebaseService->getDocument($collection, $documentId);
         return new JsonResponse($response, 200);
     }
 
