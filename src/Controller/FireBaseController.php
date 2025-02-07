@@ -83,4 +83,24 @@ class FireBaseController extends AbstractController
         // Token is valid, and you can now use user data
         return new JsonResponse(['message' => 'Token is valid', 'user' => $user->uid]);
     }
+
+    #[Route("/firebase/save", name:"firebase_save", methods:['POST'])]
+    public function saveToFirestore(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['collection'], $data['data'])) {
+            return new JsonResponse(['error' => 'Missing collection or data field'], 400);
+        }
+
+        $collection = $data['collection'];
+        $documentId = $data['documentId'] ?? null; // Optional: If provided, it updates the document
+        $documentData = $data['data'];
+
+        $response = $this->firebaseService->saveDocument($collection, $documentId, $documentData);
+
+        return new JsonResponse($response);
+    }
+
+
 }
