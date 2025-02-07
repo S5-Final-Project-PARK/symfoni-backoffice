@@ -3,7 +3,7 @@
 Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-domain.up.railway.app</a>
 
   <h2>Dishes</h2>
-    create_dish                     POST     ANY      ANY    <strong>/dishes/create</strong>
+    create_dish                     POST     ANY      ANY    /dishes/create
       data{
         "name":String
       }
@@ -15,13 +15,13 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
             ]
       }
 
-    list_dishes                     GET      ANY      ANY    <strong>/dishes/list</strong>
+    list_dishes                     GET      ANY      ANY    /dishes/list
       return{
           'id',
           'name'
       }
 
-    get_dish                        GET      ANY      ANY    <strong>/dishes/get/{name}-{id}</strong>
+    get_dish                        GET      ANY      ANY    /dishes/get/{name}-{id}
       data{
         *on url change name and id by the corresponding dish
       }
@@ -31,21 +31,21 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
           'recipe'
       }
 
-    app_dish_cancel                 DELETE   ANY      ANY    <strong>/dishes/cancel/{id}</strong>
+    app_dish_cancel                 DELETE   ANY      ANY    /dishes/cancel/{id}
       data{
         *on url change name and id by the corresponding dish
       }
 
-    app_dish_delete                 DELETE   ANY      ANY    <strong>/dishes/delete/{id}</strong>
+    app_dish_delete                 DELETE   ANY      ANY    /dishes/delete/{id}
       data{
         *on url change name and id by the corresponding dish
       }
 
   <h2>Firebase Connection</h2>
-    firebase_test                   ANY      ANY      ANY    <strong>/firebase/test</strong>
+    firebase_test                   ANY      ANY      ANY    /firebase/test
       return new JsonResponse(['message' => 'Firebase connected successfully!']);
       
-    firebase_login                  POST     ANY      ANY    <strong>/firebase/login</strong>
+    firebase_login                  POST     ANY      ANY    /firebase/login
       data{
         'email'
         'password'
@@ -54,26 +54,26 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
         'idToken'
       }
     
-    firebase_verify                 POST     ANY      ANY    <strong>/firebase/verify</strong>
+    firebase_verify                 POST     ANY      ANY    /firebase/verify
       data{
         Header Bearer => Token
       }
 
-    firebase_save                   POST     ANY      ANY    <strong>/firebase/save</strong>
+    firebase_save                   POST     ANY      ANY    /firebase/save
       data{
         'collection'
         'documentId'
         'fields'{}
       }
       
-    firebase_get                    POST     ANY      ANY    <strong>/firebase/get</strong>
+    firebase_get                    POST     ANY      ANY    /firebase/get
       data{
         'collection'
         'documentId' *optional
       }
 
   <h2>Ingredients</h2>
-    create_ingredients_category     POST     ANY      ANY    <strong>/ingredients-category/create</strong>
+    create_ingredients_category     POST     ANY      ANY    /ingredients-category/create
       data{
         "name":String
       }
@@ -85,13 +85,13 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
             ]
       }
 
-    list_ingredients_category       GET      ANY      ANY    <strong>/ingredients-category/list</strong>
+    list_ingredients_category       GET      ANY      ANY    /ingredients-category/list
       return{
         'id'
         'name'
       }
 
-    get_ingredients_from_category   GET      ANY      ANY    <strong>/ingredients-category/get/{name}-{id}</strong>
+    get_ingredients_from_category   GET      ANY      ANY    /ingredients-category/get/{name}-{id}
       data{
         *on url change name and id by the corresponding ingredients by category
       }
@@ -100,7 +100,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
         'name'
       ]}
     
-    create_ingredients              POST     ANY      ANY    <strong>/ingredients/create</strong>
+    create_ingredients              POST     ANY      ANY    /ingredients/create
       data{
         'name'
         'idCategory'
@@ -114,7 +114,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
             ]
       }
     
-    update_ingredient_quantity      POST     ANY      ANY    <strong>/ingredients/update-quantity</strong>
+    update_ingredient_quantity      POST     ANY      ANY    /ingredients/update-quantity
       data{
         'ingredients_id'
         'new_quantity'
@@ -129,14 +129,14 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
             ]
       }
       
-    list_ingredients                GET      ANY      ANY    <strong>/ingredients/list</strong>
+    list_ingredients                GET      ANY      ANY    /ingredients/list
       return{
         'id'
         'name'
         'quantity'
       }
     
-    show_ingredients                GET      ANY      ANY    <strong>/ingredients/detail/{name}-{id}</strong>
+    show_ingredients                GET      ANY      ANY    /ingredients/detail/{name}-{id}
       return{
         'id'
         'name'
@@ -145,7 +145,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
       }
 
   <h2>Recipes</h2>
-    create_recipe                   POST     ANY      ANY    <strong>/recipes/create</strong>
+    create_recipe                   POST     ANY      ANY    /recipes/create
       data{
         'dish_id'
         'ingredient' : [{
@@ -154,7 +154,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
         }]*Must be Array of ingredients
       }
       
-    add_to_recipe                   POST     ANY      ANY    <strong>/recipes/add</strong>
+    add_to_recipe                   POST     ANY      ANY    /recipes/add
       data{
         'dishId',
         'ingredient':{
@@ -163,7 +163,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
         }
       }
     
-    list_recipe                     GET      ANY      ANY    <strong>/recipe/list</strong>
+    list_recipe                     GET      ANY      ANY    /recipe/list
       return{
         ingredients:{
           'id',
