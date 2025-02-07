@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    firebase_credentials: '%kernel.project_dir%/config/firebase_credentials.json'
+    firebase_credentials: '%env(json:FIREBASE_CREDENTIALS)%'
 
 services:
     # default configuration for services in *this* file
@@ -20,7 +20,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-            
+
     Kreait\Firebase\Factory:
         class: Kreait\Firebase\Factory
         arguments:
