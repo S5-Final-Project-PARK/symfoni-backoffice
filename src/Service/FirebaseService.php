@@ -56,9 +56,11 @@ class FirebaseService
     /**
      * Fetch a document from Firestore (REST API)
      */
-    public function getDocument(string $collection, string $documentId): array
+    public function getDocument(string $collection, ?string $documentId): array
     {
-        $url = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}/{$documentId}";
+        $url = ($documentId === null)
+        ? "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}"
+        : "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}/{$documentId}";
 
         try {
             $response = $this->httpClient->get($url, [
