@@ -20,6 +20,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    
+    App\Service\FirebaseService:
+        arguments:
+            $firebaseCredentialsPath: '%kernel.project_dir%/config/firebase_credentials.json'
 
     Kreait\Firebase\Factory:
         class: Kreait\Firebase\Factory
