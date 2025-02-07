@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Dishes;
 use App\Repository\DishesRepository;
+use App\Repository\RecipesRepository;
+use App\Repository\RecipeIngredientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,32 +72,57 @@ class DishController extends AbstractController
     }
 
     #[Route('/dishes/cancel/{id}', methods: ['DELETE'])]
-    public function cancel(int $id, EntityManagerInterface $entityManager): Response
+    public function cancel(int $id, EntityManagerInterface $entityManager, RecipesRepository $recipesRepository, RecipeIngredientRepository $recipeIngredientRepository): Response
     {
         $dish = $entityManager->getRepository(Dishes::class)->find($id);
-        
         if (!$dish) {
             return new JsonResponse(['error' => 'Dish not found'], Response::HTTP_NOT_FOUND);
         }
-        
+
+        // Check if the dish is used in any recipes
+        $recipe = $recipesRepository->findOneBy(['dish' => $dish]);
+        if ($recipe) {
+            // If the dish is part of a recipe, remove the ingredients related to this recipe
+            foreach ($recipe->getRecipeIngredients() as $recipeIngredient) {
+                $entityManager->remove($recipeIngredient);
+            }
+
+            // Remove the recipe itself if needed
+            $entityManager->remove($recipe);
+        }
+
+        // Finally, remove the dish
         $entityManager->remove($dish);
         $entityManager->flush();
         
-        return new JsonResponse(['message' => 'Dish deleted successfully']);
+        return new JsonResponse(['message' => 'Dish and related recipes/ingredients canceled successfully']);
     }
 
     #[Route('/dishes/delete/{id}', methods: ['DELETE'])]
-    public function delete(int $id, EntityManagerInterface $entityManager): Response
-    {
+    public function delete(int $id, EntityManagerInterface $entityManager, RecipesRepository $recipesRepository, RecipeIngredientRepository $recipeIngredientRepository): JsonResponse {
+        // Find the dish by ID
         $dish = $entityManager->getRepository(Dishes::class)->find($id);
-        
         if (!$dish) {
             return new JsonResponse(['error' => 'Dish not found'], Response::HTTP_NOT_FOUND);
         }
-        
+
+        // Check if the dish is used in any recipes
+        $recipe = $recipesRepository->findOneBy(['dish' => $dish]);
+        if ($recipe) {
+            // If the dish is part of a recipe, remove the ingredients related to this recipe
+            foreach ($recipe->getRecipeIngredients() as $recipeIngredient) {
+                $entityManager->remove($recipeIngredient);
+            }
+
+            // Remove the recipe itself if needed
+            $entityManager->remove($recipe);
+        }
+
+        // Finally, remove the dish
         $entityManager->remove($dish);
         $entityManager->flush();
         
-        return new JsonResponse(['message' => 'Dish deleted successfully']);
+        return new JsonResponse(['message' => 'Dish and related recipes/ingredients deleted successfully']);
     }
+
 }
