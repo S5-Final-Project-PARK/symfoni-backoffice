@@ -104,9 +104,12 @@ class FireBaseController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         // Ensure the required fields exist
-        if (!isset($data['collection'], $data['documentId'])) {
+        if (!isset($data['collection'])) {
             return new JsonResponse(['error' => 'Missing collection or documentId'], 400);
         }
+
+        $collection = $data['collection'];
+        $documentId = $data['documentId'] ?? null;
 
         $response = $this->firebaseService->getDocument($data['collection'], $data['documentId']);
         return new JsonResponse($response, 200);
