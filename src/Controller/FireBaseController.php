@@ -5,7 +5,7 @@
     use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\Routing\Annotation\Route;
 
-    class FirebaseController extends AbstractController
+    class FireBaseController extends AbstractController
     {
         #[Route('/firebase/test', name: 'firebase_test')]
         public function testFirebase(): JsonResponse
