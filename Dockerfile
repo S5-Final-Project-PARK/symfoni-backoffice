@@ -28,7 +28,7 @@ RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
 
 # RUN composer require doctrine/dbal
 
-RUN openssl enc -aes-256-cbc -in app/config/firebase_credentials.json -out app/config/firebase_credentials.json.gpg -pass pass:root
+RUN openssl enc -aes-256-cbc -in config/firebase_credentials.json -out config/firebase_credentials.json.gpg -pass pass:root
 
 RUN composer require symfony/serializer
 
