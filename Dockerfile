@@ -28,6 +28,10 @@ RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
 
 # RUN composer require doctrine/dbal
 
+RUN php bin/console cache:clear
+
+RUN php bin/console cache:clear --env=prod
+
 RUN composer require symfony/serializer
 
 RUN composer require api
@@ -35,10 +39,6 @@ RUN composer require api
 RUN composer require google/cloud-firestore --ignore-platform-req=ext-grpc
 
 RUN docker-php-ext-install pdo_pgsql
-
-RUN php bin/console cache:clear
-
-RUN php bin/console cache:clear --env=prod
 
 # Set the port Symfony will use
 ENV PORT=8000
