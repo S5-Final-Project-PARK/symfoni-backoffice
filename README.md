@@ -3,6 +3,7 @@
 Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-domain.up.railway.app</a>
 
   <h2>Dishes</h2>
+  
     create_dish                     POST     ANY      ANY    /dishes/create
       data{
         "name":String
@@ -42,6 +43,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
       }
 
   <h2>Firebase Connection</h2>
+  
     firebase_test                   ANY      ANY      ANY    /firebase/test
       return new JsonResponse(['message' => 'Firebase connected successfully!']);
       
@@ -73,6 +75,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
       }
 
   <h2>Ingredients</h2>
+  
     create_ingredients_category     POST     ANY      ANY    /ingredients-category/create
       data{
         "name":String
@@ -145,6 +148,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
       }
 
   <h2>Recipes</h2>
+  
     create_recipe                   POST     ANY      ANY    /recipes/create
       data{
         'dish_id'
