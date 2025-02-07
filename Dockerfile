@@ -9,7 +9,10 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    php-dev php-pear\
     && docker-php-ext-install zip pdo pdo_mysql
+
+RUN pecl install grpc
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -28,17 +31,17 @@ RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
 
 # RUN composer require doctrine/dbal
 
-RUN php bin/console cache:clear
-
-RUN php bin/console cache:clear --env=prod
-
 RUN composer require symfony/serializer
 
 RUN composer require api
 
-RUN composer require google/cloud-firestore --ignore-platform-req=ext-grpc
+RUN composer require google/cloud-firestore
 
 RUN docker-php-ext-install pdo_pgsql
+
+RUN php bin/console cache:clear
+
+RUN php bin/console cache:clear --env=prod
 
 # Set the port Symfony will use
 ENV PORT=8000
