@@ -38,28 +38,66 @@ class FireBaseController extends AbstractController
     public function login(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        
+
         if (isset($data['email'], $data['password'])) {
             try {
                 // Here we verify the user credentials (email/password) using Firebase Authentication
                 $signInResult = $this->auth->signInWithEmailAndPassword($data['email'], $data['password']);
                 $idToken = $signInResult->idToken(); // Get the ID token
+                $uid = $signInResult->firebaseUserId(); // Get the Firebase UID
 
-                // Return the token as a response
+                // Check if the user has a role
+                $userDoc = $this->firebaseService->getDocument('users', $uid);
+                if (empty($userDoc['fields']['role'])) {
+                    // If no role, set it to 'user'
+                    $this->firebaseService->storeUserRoleInFirestore($uid, 'user');
+                }
+
+                // Return the token and the role
                 return new JsonResponse([
                     'message' => 'Login successful',
                     'idToken' => $idToken,
-                ],200);
+                    'role' => $userDoc['fields']['role']['stringValue'] ?? 'user', // Return the role (default to 'user')
+                ], 200);
+
             } catch (\Kreait\Firebase\Exception\Auth\InvalidPassword $e) {
                 return new JsonResponse(['error' => 'Invalid password'], Response::HTTP_UNAUTHORIZED);
             } catch (\Kreait\Firebase\Exception\Auth\UserNotFound $e) {
                 return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
             } catch (\Kreait\Firebase\Exception\AuthException $e) {
-                return new JsonResponse(['error' => 'Authentification Error'], Response::HTTP_UNAUTHORIZED);
+                return new JsonResponse(['error' => 'Authentication Error'], Response::HTTP_UNAUTHORIZED);
             }
         }
 
         return new JsonResponse(['message' => 'Email and password are required'], Response::HTTP_BAD_REQUEST);
+    }
+
+    #[Route('/firebase/create-user', name: 'firebase_create_user', methods: ['POST'])]
+    public function createUser(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['email'], $data['password'], $data['role'])) {
+            try {
+                // Create the user with Firebase Authentication
+                $user = $this->auth->createUserWithEmailAndPassword($data['email'], $data['password']);
+                $uid = $user->uid;
+
+                // Set the role in Firestore
+                $this->firebaseService->storeUserRoleInFirestore($uid, $data['role']);
+
+                return new JsonResponse([
+                    'message' => 'User created successfully',
+                    'uid' => $uid,
+                    'role' => $data['role'],
+                ], 201);
+
+            }catch (\Kreait\Firebase\Exception\AuthException $e) {
+                return new JsonResponse(['error' => 'Error creating user'], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return new JsonResponse(['error' => 'Email, password, and role are required'], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route("/firebase/verify", name:"firebase_verify", methods:['POST'])]

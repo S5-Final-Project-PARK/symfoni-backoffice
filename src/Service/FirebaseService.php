@@ -115,4 +115,19 @@ class FirebaseService
 
         return $formattedData;
     }
+
+    public function storeUserRoleInFirestore(string $uid, string $role): void
+    {
+        // Prepare the data to be updated
+        $data = [
+            'fields' => [
+                'role' => [
+                    'stringValue' => $role,  // The role value, e.g., 'admin', 'user'
+                ]
+            ]
+        ];
+
+        // Call the setDocument method from FirebaseService
+        $this->setDocument('users', $uid, $data);
+    }
 }
