@@ -62,7 +62,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
         data{
           'email'
           'password'
-          'role' * Either 'user' or 'admin'
+          'role' * Only 'user' or 'admin'
         }
     
     firebase_verify                 POST     ANY      ANY    /firebase/verify
