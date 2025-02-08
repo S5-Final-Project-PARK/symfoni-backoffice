@@ -82,7 +82,7 @@ class OrderController extends AbstractController
         ];
 
         // Save to Firestore
-        $response = $this->firebaseService->setDocument('orders', (string) $order->getId(), $firestoreData);
+        $response = $this->firebaseService->setDocument('order', (string) $order->getId(), $firestoreData);
 
         return new JsonResponse(['order' => $order, 'firestore_response' => $response], 201);
     }
