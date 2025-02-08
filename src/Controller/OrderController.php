@@ -111,24 +111,8 @@ class OrderController extends AbstractController
         $order->setConfirmation(true);
         $this->em->flush();
 
-
-
-        // Update the confirmation status in Firestore
-        // $firestoreResponse = $this->firebaseService->setDocument('orders', (string) $id, [
-        //     'confirmation' => true,
-        //     'date' => $order->getDate()->format(\DateTime::ATOM),
-        //     'dishes' => [
-        //         [
-        //             'name' => $order->getDish()->getName(),
-        //             'unit' => $order->getUnit(),
-        //             'unit_price' => $order->getUnitPrice(),
-        //         ]
-        //     ],
-        //     'email' => $order->getEmail()
-        // ]);
-
         $firestoreResponse = $this->firebaseService->setDocument('orders', (string) $id, [
-            'confirmation' => ['booleanValue' => false], // Firestore requires explicit boolean type
+            'confirmation' => ['booleanValue' => true], // Firestore requires explicit boolean type
             'date' => ['timestampValue' => (new \DateTime($order->getDate()->format(\DateTime::ATOM)))->format('Y-m-d\TH:i:s\Z')], // Convert to Firestore timestamp format
             'dishes' => [
                 'arrayValue' => [
