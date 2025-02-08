@@ -40,14 +40,14 @@ class OrderController extends AbstractController
         $order->setDate(new \DateTime($data['date'])); // Ensure the date is in a valid format (ISO 8601)
 
         // Assuming there is only one dish in the 'dishes' array
-        $dishName = $data['dishes'][0]['name']; // Example: 'dish1'
+        $dishName = $data['dishes']['name']; // Example: 'dish1'
         $dish = $this->em->getRepository(Dishes::class)->findOneBy(['name' => $dishName]);
         if (!$dish) {
             return new JsonResponse(['error' => 'Dish not found'], 404);
         }
 
         $order->setDish($dish);
-        $order->setUnit($data['dishes'][0]['unit']); // Assuming unit is an integer or string
+        $order->setUnit($data['dishes']['unit']); // Assuming unit is an integer or string
         $order->setUnitPrice($dish->getPrice()); // Assuming unit_price is a string or number
 
         // Persist the order in the database
@@ -61,7 +61,7 @@ class OrderController extends AbstractController
             'dishes' => [
                 [
                     'name' => $dishName,
-                    'unit' => $data['dishes'][0]['unit'],
+                    'unit' => $data['dishes']['unit'],
                     'unit_price' => $dish->getPrice()
                 ]
             ],
