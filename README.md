@@ -90,6 +90,21 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
             ]
       }
 
+    add_ingredient_quantity         POST     ANY      ANY    /ingredients/add-quantity
+    data{
+        'ingredients_id'
+        'added_quantity'
+      }
+      return{
+        'message' => 'Ingredient quantity updated successfully',
+            'ingredient' => [
+                'id' => $ingredient->getId(),
+                'name' => $ingredient->getName(),
+                'old_quantity' => $oldQuantity,
+                'new_quantity' => $newQuantity,
+            ]
+      }
+
     list_ingredients_category       GET      ANY      ANY    /ingredients-category/list
       return{
         'id'
