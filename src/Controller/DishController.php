@@ -116,7 +116,7 @@ class DishController extends AbstractController
         }
 
         // Check if the dish is used in any recipes
-        $recipe = $recipesRepository->findOneBy(['dish' => $dish]);
+        $recipe = $recipesRepository->findOneBy(['Dish' => $dish]);
         if ($recipe) {
             // If the dish is part of a recipe, remove the ingredients related to this recipe
             foreach ($recipe->getRecipeIngredients() as $recipeIngredient) {
