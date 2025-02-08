@@ -74,7 +74,7 @@ class OrderController extends AbstractController
         return new JsonResponse(['order' => $order, 'firestore_response' => $response], 201);
     }
 
-    #[Route("/orders/get", name: "get_orders", methods: ['GET'])]
+    #[Route("/orders/list", name: "list_orders", methods: ['GET'])]
     public function getOrders(): JsonResponse
     {
         // Retrieve all orders
