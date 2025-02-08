@@ -22,7 +22,14 @@ class DishController extends AbstractController
 
         if (!isset($data['name'], $data['price'])) {
             return $this->json([
-                'error' => 'Missing required field: name'
+                'error' => 'Missing required field: name or price'
+            ], 400);
+        }
+
+        $verify = $em->getRepository(Dishes::class)->findOneBy(['name' => $data['name']]);
+        if($verify){
+            return $this->json([
+                'error' => 'This Dish exists already'
             ], 400);
         }
 
