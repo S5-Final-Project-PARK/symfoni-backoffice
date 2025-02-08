@@ -111,19 +111,43 @@ class OrderController extends AbstractController
         $order->setConfirmation(true);
         $this->em->flush();
 
+
+
         // Update the confirmation status in Firestore
+        // $firestoreResponse = $this->firebaseService->setDocument('orders', (string) $id, [
+        //     'confirmation' => true,
+        //     'date' => $order->getDate()->format(\DateTime::ATOM),
+        //     'dishes' => [
+        //         [
+        //             'name' => $order->getDish()->getName(),
+        //             'unit' => $order->getUnit(),
+        //             'unit_price' => $order->getUnitPrice(),
+        //         ]
+        //     ],
+        //     'email' => $order->getEmail()
+        // ]);
+
         $firestoreResponse = $this->firebaseService->setDocument('orders', (string) $id, [
-            'confirmation' => true,
-            'date' => $order->getDate()->format(\DateTime::ATOM),
+            'confirmation' => ['booleanValue' => false], // Firestore requires explicit boolean type
+            'date' => ['timestampValue' => (new \DateTime($order->getDate()->format(\DateTime::ATOM)))->format('Y-m-d\TH:i:s\Z')], // Convert to Firestore timestamp format
             'dishes' => [
-                [
-                    'name' => $order->getDish()->getName(),
-                    'unit' => $order->getUnit(),
-                    'unit_price' => $order->getUnitPrice(),
+                'arrayValue' => [
+                    'values' => [
+                        [
+                            'mapValue' => [
+                                'fields' => [
+                                    'name' => ['stringValue' => $order->getDish()->getName()],
+                                    'unit' => ['integerValue' => (int)$order->getUnit()],
+                                    'unit_price' => ['doubleValue' => (float)$order->getUnitPrice()]
+                                ]
+                            ]
+                        ]
+                    ]
                 ]
             ],
-            'email' => $order->getEmail()
+            'email' => ['stringValue' => $order->getEmail()]
         ]);
+
 
         return new JsonResponse([
             'message' => 'Order confirmation updated successfully',
