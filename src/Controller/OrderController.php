@@ -53,7 +53,7 @@ class OrderController extends AbstractController
 
         $order->setDish($dish);
         $order->setUnit((int)$unit); // Assuming unit is an integer or string
-        $order->setUnitPrice($dish->getPrice() * $unit); // Assuming unit_price is a string or number
+        $order->setUnitPrice($dish->getPrice()); // Assuming unit_price is a string or number
 
         // Persist the order in the database
         $this->em->persist($order);
