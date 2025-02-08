@@ -46,18 +46,6 @@ class Orders
         return $this->id;
     }
 
-    public function getIdClient(): ?string
-    {
-        return $this->idClient;
-    }
-
-    public function setIdClient(string $idClient): static
-    {
-        $this->idClient = $idClient;
-
-        return $this;
-    }
-
     public function getDish(): ?Dishes
     {
         return $this->Dish;
