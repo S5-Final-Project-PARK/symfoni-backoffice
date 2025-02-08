@@ -79,7 +79,7 @@ class FireBaseController extends AbstractController
 
         if (isset($data['email'], $data['password'], $data['role'])) {
             try {
-                if($data['role'] != 'user' || $data['role'] != 'admin'){
+                if($data['role'] != "user" || $data['role'] != "admin"){
                     return $this->json(['error' => 'Role must be Either User or Admin'], 401);
                 }
                 // Create the user with Firebase Authentication
