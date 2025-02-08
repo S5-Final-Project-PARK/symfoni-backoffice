@@ -20,7 +20,7 @@ class DishController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['name'])) {
+        if (!isset($data['name'], $data['price'])) {
             return $this->json([
                 'error' => 'Missing required field: name'
             ], 400);
@@ -28,6 +28,7 @@ class DishController extends AbstractController
 
         $dish = new Dishes();
         $dish->setName($data['name']);
+        $dish->setPrice($data['price']);
 
         $em->persist($dish);
         $em->flush();
@@ -37,6 +38,7 @@ class DishController extends AbstractController
             'dish' => [
                 'id' => $dish->getId(),
                 'name' => $dish->getName(),
+                'price' => $dish->getPrice()
             ]
         ], 201);
     }

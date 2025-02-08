@@ -42,6 +42,7 @@ class Orders
     private ?string $email = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups(["order.verif"])]
     private bool $confirmation = false;
 
     public function getId(): ?int
