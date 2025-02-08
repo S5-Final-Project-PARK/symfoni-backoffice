@@ -37,7 +37,7 @@ class OrderController extends AbstractController
         $order = new Orders();
         // $order->setIdClient($data['idClient']);
         $order->setEmail($data['email']);
-        $order->setDate(new \DateTime($data['date'])); // Ensure the date is in a valid format (ISO 8601)
+        $order->setDate(new \DateTime($data['date'])); // Ensure the date is in a valid format (ATOM)
 
         // Assuming there is only one dish in the 'dishes' array
         $dishName = $data['dishes']['name']; // Example: 'dish1'
@@ -45,10 +45,15 @@ class OrderController extends AbstractController
         if (!$dish) {
             return new JsonResponse(['error' => 'Dish not found'], 404);
         }
+        $unit = $data['dishes']['unit'];
+
+        if (!is_numeric($unit) || (int)$unit < 1) {
+            return new JsonResponse(['error' => 'Unit must be a valid quantity (positive number)'], 400);
+        }
 
         $order->setDish($dish);
-        $order->setUnit($data['dishes']['unit']); // Assuming unit is an integer or string
-        $order->setUnitPrice($dish->getPrice()); // Assuming unit_price is a string or number
+        $order->setUnit((int)$unit); // Assuming unit is an integer or string
+        $order->setUnitPrice($dish->getPrice() * $unit); // Assuming unit_price is a string or number
 
         // Persist the order in the database
         $this->em->persist($order);
