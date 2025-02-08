@@ -169,7 +169,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
     create_recipe                   POST     ANY      ANY    /recipes/create
       data{
         'dish_id'
-        'ingredient' : [{
+        'ingredients' : [{
           'id',
           'quantity'
         }]*Must be Array of ingredients
