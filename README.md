@@ -14,6 +14,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
             'dish' => [
                 'id' => $dish->getId(),
                 'name' => $dish->getName(),
+                'price' => $dish->getPrice()
             ]
       }
 
