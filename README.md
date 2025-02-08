@@ -64,6 +64,13 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
           'password'
           'role' * Only 'user' or 'admin'
         }
+
+        return{
+          'email'
+          'uid'
+          'role'
+          *doesn't return idToken, have to go login
+        }
     
     firebase_verify                 POST     ANY      ANY    /firebase/verify
       data{
