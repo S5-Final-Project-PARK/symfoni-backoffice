@@ -7,6 +7,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
     create_dish                     POST     ANY      ANY    /dishes/create
       data{
         "name":String
+        "price": Number
       }
       return{
         'message' => 'Dish created successfully',
