@@ -18,10 +18,6 @@ class Orders
 
     #[ORM\Column(type: Types::BIGINT)]
     #[Groups(["order.show"])]
-    private ?string $idClient = null;
-
-    #[ORM\Column(type: Types::BIGINT)]
-    #[Groups(["order.show"])]
     private ?string $unit = null;
 
     #[ORM\Column(type: Types::BIGINT)]
