@@ -50,6 +50,8 @@ final class RecipesController extends AbstractController
             $recipeIngredient->setIngredients($ingredient);
             $recipeIngredient->setQuantity($ingredientData['quantity']);
 
+            $entityManager->persist($recipeIngredient);
+
             $recipe->addRecipeIngredient($recipeIngredient);
         }
 
