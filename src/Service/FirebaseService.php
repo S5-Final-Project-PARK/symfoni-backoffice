@@ -83,13 +83,15 @@ class FirebaseService
     {
         $url = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/{$collection}/{$documentId}";
         
+        $firestoreData = ['fields' => $data];
+
         try {
             $response = $this->httpClient->patch($url, [
                 'headers' => [
                     'Authorization' => "Bearer {$this->accessToken}",
                     'Content-Type' => 'application/json',
                 ],
-                'json' => $data,
+                'json' => $firestoreData,
             ]);
 
             return json_decode($response->getBody()->getContents(), true);
