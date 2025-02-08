@@ -61,16 +61,16 @@ class OrderController extends AbstractController
 
         // Format Firestore data for the order (with confirmation set to false)
         $firestoreData = [
-            'confirmation' => false, // Initially false
-            'date' => $data['date'],
+            'confirmation' => ['booleanValue' => false], // Firestore requires explicit boolean type
+            'date' => ['timestampValue' => $data['date']], // Firestore prefers timestamp format
             'dishes' => [
                 [
-                    'name' => $dishName,
-                    'unit' => $data['dishes']['unit'],
-                    'unit_price' => $dish->getPrice()
+                    'name' => ['stringValue' => $dishName], // Firestore expects stringValue for text fields
+                    'unit' => ['integerValue' => (int)$data['dishes']['unit']], // Ensure unit is an integer
+                    'unit_price' => ['doubleValue' => (float)$dish->getPrice()] // Ensure price is stored correctly
                 ]
             ],
-            'email' => $data['email']
+            'email' => ['stringValue' => $data['email']]
         ];
 
         // Save to Firestore
