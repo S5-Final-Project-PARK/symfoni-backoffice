@@ -214,7 +214,7 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
 
     save_order                      POST     ANY      ANY    /orders/save
       data{
-          'date'
+          'date'(YY-MM-DD)
           'dishes': {"name", "unit"}
           'email'
       }
