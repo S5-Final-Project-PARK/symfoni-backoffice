@@ -26,7 +26,7 @@ class Dishes
      * @var Collection<int, Recipes>
      */
     #[ORM\OneToMany(targetEntity: Recipes::class, mappedBy: 'Dish')]
-    #[Groups(["dish.show"])]
+    #[Groups(["dish.show", "order.show"])]
     private Collection $recipes;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 38, scale: 2)]

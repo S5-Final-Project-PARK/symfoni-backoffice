@@ -21,12 +21,12 @@ class Recipes
      * @var Collection<int, Ingredients>
      */
     #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'recipes')]
-    #[Groups(["recipe.create", "recipe.update", "recipe.show", "order.show"])]
+    #[Groups(["recipe.create", "recipe.update", "recipe.show"])]
     private Collection $idIngredients;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["recipe.list", "recipe.create", "recipe.update", "order.show" ,"recipe.show"])]
+    #[Groups(["recipe.list", "recipe.create", "recipe.update", "recipe.show"])]
     private ?Dishes $Dish = null;
 
     /**

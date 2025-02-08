@@ -22,6 +22,7 @@ class RecipeIngredient
 
     #[ORM\ManyToOne(inversedBy: 'recipeIngredients')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["recipe.show"])]
     private ?Recipes $recipe = null;
 
     #[ORM\Column]
