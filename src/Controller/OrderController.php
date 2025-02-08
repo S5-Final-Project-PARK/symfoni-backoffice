@@ -82,7 +82,7 @@ class OrderController extends AbstractController
         ];
 
         // Save to Firestore
-        $response = $this->firebaseService->setDocument('order', (string) $order->getId(), $firestoreData);
+        $response = $this->firebaseService->setDocument('orders', (string) $order->getId(), $firestoreData);
 
         return new JsonResponse(['order' => $order, 'firestore_response' => $response], 201);
     }
@@ -111,7 +111,7 @@ class OrderController extends AbstractController
         $order->setConfirmation(true);
         $this->em->flush();
 
-        $firestoreResponse = $this->firebaseService->setDocument('order', (string) $id, [
+        $firestoreResponse = $this->firebaseService->setDocument('orders', (string) $id, [
             'confirmation' => ['booleanValue' => true], // Firestore requires explicit boolean type
             'date' => ['timestampValue' => (new \DateTime($order->getDate()->format(\DateTime::ATOM)))->format('Y-m-d\TH:i:s\Z')], // Convert to Firestore timestamp format
             'dishes' => [
