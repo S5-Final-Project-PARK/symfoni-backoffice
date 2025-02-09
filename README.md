@@ -177,6 +177,15 @@ Main URL : <a href="https://cookscape-domain.up.railway.app">https://cookscape-d
         'quantity'
         'Category':{}
       }
+    
+    logs-ingredients                GET      ANY      ANY    /ingredients/logs
+    return{
+      'id'
+      'ingredients':{}
+      'oldQuantity'
+      'newQuantity'
+      'updatedAt'
+    }
 
   <h2>Recipes</h2>
   
