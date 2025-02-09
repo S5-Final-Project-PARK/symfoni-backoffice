@@ -50,7 +50,7 @@ class FireBaseController extends AbstractController
                 $userDoc = $this->firebaseService->getDocument('users', $uid);
                 if (empty($userDoc['fields']['role'])) {
                     // If no role, set it to 'user'
-                    $this->firebaseService->storeUserRoleInFirestore($uid, 'user');
+                    $this->firebaseService->storeUserRoleInFirestore($uid, 'user', $data['email']);
                 }
 
                 // Return the token and the role
@@ -87,12 +87,13 @@ class FireBaseController extends AbstractController
                 $uid = $user->uid;
 
                 // Set the role in Firestore
-                $this->firebaseService->storeUserRoleInFirestore($uid, $data['role']);
+                $this->firebaseService->storeUserRoleInFirestore($uid, $data['role'], $data['email']);
 
                 return new JsonResponse([
                     'message' => 'User created successfully',
                     'uid' => $uid,
                     'role' => $data['role'],
+                    'email' => $data['email']
                 ], 201);
 
             }catch (\Kreait\Firebase\Exception\AuthException $e) {

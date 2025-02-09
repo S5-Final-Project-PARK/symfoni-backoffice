@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ingredients;
 use App\Entity\IngredientsCategory;
 use App\Entity\IngredientsLogs;
+use App\Repository\IngredientsLogsRepository;
 use App\Repository\IngredientsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -170,6 +171,16 @@ final class IngredientsController extends AbstractController
 
         return $this->json($ingredient, 200, [], [
             "groups" => ["ingredients.show"]
+        ]);
+    }
+
+    #[Route('/ingredients/logs', name: 'show-ingredients', methods: ['GET'])]
+    public function log(IngredientsLogsRepository $repository): JsonResponse
+    {
+        $logs = $repository->findAll();
+
+        return $this->json($logs, 200, [], [
+            "groups" => ["logs.show"]
         ]);
     }
 }

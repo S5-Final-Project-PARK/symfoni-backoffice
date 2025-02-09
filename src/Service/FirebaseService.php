@@ -118,13 +118,16 @@ class FirebaseService
         return $formattedData;
     }
 
-    public function storeUserRoleInFirestore(string $uid, string $role): void
+    public function storeUserRoleInFirestore(string $uid, string $role, string $email): void
     {
         // Prepare the data to be updated
         $data = [
             'fields' => [
                 'role' => [
                     'stringValue' => $role,  // The role value, e.g., 'admin', 'user'
+                ],
+                'email' => [
+                    'stringValue' => $email,
                 ]
             ]
         ];
@@ -132,4 +135,31 @@ class FirebaseService
         // Call the setDocument method from FirebaseService
         $this->setDocument('users', $uid, $data);
     }
+
+    public function getUserUidByEmail(string $email): ?string
+    {
+        $url = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents/users";
+
+        try {
+            $response = $this->httpClient->get($url, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            $documents = json_decode($response->getBody()->getContents(), true);
+            
+            foreach ($documents['documents'] as $doc) {
+                if ($doc['fields']['email']['stringValue'] === $email) {
+                    return basename($doc['name']);
+                }
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
 }
