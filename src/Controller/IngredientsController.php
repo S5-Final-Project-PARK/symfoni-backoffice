@@ -174,7 +174,7 @@ final class IngredientsController extends AbstractController
         ]);
     }
 
-    #[Route('/ingredients/logs', name: 'show-ingredients', methods: ['GET'])]
+    #[Route('/ingredients/logs', name: 'logs-ingredients', methods: ['GET'])]
     public function log(IngredientsLogsRepository $repository): JsonResponse
     {
         $logs = $repository->findAll();
