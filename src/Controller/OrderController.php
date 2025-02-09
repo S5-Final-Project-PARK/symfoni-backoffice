@@ -90,8 +90,8 @@ class OrderController extends AbstractController
     #[Route("/orders/list", name: "list_orders", methods: ['GET'])]
     public function getOrders(): JsonResponse
     {
-        // Retrieve all orders
-        $orders = $this->em->getRepository(Orders::class)->findAll();
+        // Retrieve only orders where confirmation is false
+        $orders = $this->em->getRepository(Orders::class)->findBy(['confirmation' => false]);
 
         return $this->json($orders, 200, [], [
             "groups" => ["order.show"]
