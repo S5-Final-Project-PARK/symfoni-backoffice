@@ -12,12 +12,12 @@ class RecipeIngredient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["order.show", "recipe.show"])]
+    #[Groups(["order.show", "recipe.show", "dish.show"])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["order.show", "recipe.show"])]
+    #[Groups(["order.show", "recipe.show", "dish.show"])]
     private ?Ingredients $ingredients = null;
 
     #[ORM\ManyToOne(inversedBy: 'recipeIngredients')]
@@ -26,7 +26,7 @@ class RecipeIngredient
     private ?Recipes $recipe = null;
 
     #[ORM\Column]
-    #[Groups(["order.show", "recipe.show"])]
+    #[Groups(["order.show", "recipe.show", "dish.show"])]
     private ?int $quantity = null;
 
     public function getId(): ?int

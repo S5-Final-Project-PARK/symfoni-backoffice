@@ -15,11 +15,11 @@ class Ingredients
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show", "logs.show"])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show", "logs.show", "dish.show"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show", "logs.show"])]
+    #[Groups(["ingredients.list", "ingredients.show", "recipe.show", "category.show", "order.show", "logs.show", "dish.show"])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'ingredients')]
