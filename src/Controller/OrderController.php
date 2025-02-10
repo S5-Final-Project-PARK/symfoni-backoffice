@@ -124,7 +124,7 @@ class OrderController extends AbstractController
         }
 
         // Get the recipe for this dish
-        $recipe = $entityManager->getRepository(Recipes::class)->findOneBy(['dish' => $dish]);
+        $recipe = $entityManager->getRepository(Recipes::class)->findOneBy(['Dish' => $dish]);
         if (!$recipe) {
             return new JsonResponse(['error' => 'Recipe not found for this dish'], 404);
         }
