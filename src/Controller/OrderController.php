@@ -113,7 +113,7 @@ class OrderController extends AbstractController
         }
 
         // Check if the order is already confirmed
-        if ($order->getConfirmation()) {
+        if ($order->isConfirmation()) {
             return new JsonResponse(['error' => 'Order is already confirmed'], 400);
         }
 
